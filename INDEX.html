@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Mantenimiento</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+    h1 { color: #2c3e50; }
+    .entry { background: white; margin: 10px 0; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>Historial de Mantenimiento</h1>
+  <div id="contenedor">Cargando...</div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const idAC = params.get("id");
+
+    fetch("https://opensheet.elk.sh/1p9evssg2Mqrps9DmhGJZZsLfqQjPQYMWxLZyz0ne4zA/HistorialAC")
+      .then(res => res.json())
+      .then(data => {
+        const filtrados = data.filter(item => item.ID_Aire === idAC);
+        if (filtrados.length === 0) {
+          document.getElementById("contenedor").innerText = "No hay datos para este equipo.";
+          return;
+        }
+
+        let html = "";
+        filtrados.forEach(item => {
+          html += `<div class="entry">
+                     <strong>Fecha:</strong> ${item.Fecha}<br>
+                     <strong>Procedimiento:</strong> ${item.Procedimiento}<br>
+                     <strong>Técnico:</strong> ${item.Técnico}
+                   </div>`;
+        });
+
+        document.getElementById("contenedor").innerHTML = html;
+      });
+  </script>
+</body>
+</html>
